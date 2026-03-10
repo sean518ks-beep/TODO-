@@ -1,7 +1,9 @@
 import './App.css'
 import { useState } from "react";
-import { Button } from "./atoms/Button";
-import { Title } from "./atoms/Title";
+import { InputTodo } from './components/InputTodo';
+import { TodoTodo } from './components/TodoTodo';
+import { InProgressTodo } from './components/InProgressTodo';
+import { DoneTodo } from './components/DoneTodo';
 
 type Todo = {
   id: number;
@@ -25,6 +27,10 @@ function App() {
       },
     ]);
     setInputText("");
+};
+
+ const deleteTodo = (id: number) => {
+  setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   const changeStatus = (id: number, status: Todo["status"]) => {
@@ -37,75 +43,28 @@ function App() {
 
   return (
     <>
-      {/* 入力エリア */}
-      <div className="input-area">
-        <input
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          placeholder="TODOを入力"
-        />
-        <Button onClick={addTodo}>追加</Button>
-      </div>
+      <InputTodo
+        inputText={inputText}
+        setInputText={setInputText}
+        addTodo={addTodo}
+      />
 
-      {/* 未着手 */}
-      <div className="todo-area">
-        <Title>未着手のTODO</Title>
-        <ul>
-          {todos
-            .filter((todo) => todo.status === "todo")
-            .map((todo) => (
-              <li key={todo.id}>
-                <p>{todo.text}</p>
-                <Button onClick={() => changeStatus(todo.id, "inProgress")}>
-                  進行中
-                </Button>
-                <Button onClick={() => changeStatus(todo.id, "done")}>
-                  完了
-                </Button>
-              </li>
-            ))}
-        </ul>
-      </div>
+      <TodoTodo
+      todos={todos.filter((todo) => todo.status === "todo")}
+    changeStatus={changeStatus}
+    deleteTodo={deleteTodo}/>
 
       {/* 進行中 */}
-      <div className="inProgress-area">
-        <Title>進行中のTODO</Title>
-        <ul>
-          {todos
-            .filter((todo) => todo.status === "inProgress")
-            .map((todo) => (
-              <li key={todo.id}>
-                <p>{todo.text}</p>
-                <Button onClick={() => changeStatus(todo.id, "done")}>
-                  完了
-                </Button>
-                <Button onClick={() => changeStatus(todo.id, "todo")}>
-                  未着手
-                </Button>
-              </li>
-            ))}
-        </ul>
-      </div>
+      <InProgressTodo
+      todos={todos.filter((todo) => todo.status === "inProgress")}
+  changeStatus={changeStatus}
+  deleteTodo={deleteTodo}/>
 
       {/* 完了 */}
-      <div className="done-area">
-        <Title>完了のTODO</Title>
-        <ul>
-          {todos
-            .filter((todo) => todo.status === "done")
-            .map((todo) => (
-              <li key={todo.id}>
-                <p>{todo.text}</p>
-                <Button onClick={() => changeStatus(todo.id, "todo")}>
-                  未着手
-                </Button>
-                <Button onClick={() => changeStatus(todo.id, "inProgress")}>
-                  進行中
-                </Button>
-              </li>
-            ))}
-        </ul>
-      </div>
+     <DoneTodo
+     todos={todos.filter((todo) => todo.status === "done")}
+  changeStatus={changeStatus}
+  deleteTodo={deleteTodo}/>
     </>
   );
 }

@@ -1,26 +1,16 @@
-import { useState } from "react";
 import { Button } from "../atoms/Button";
 
 type Props = {
-  onClick: () => void;
+  inputText: string;
+  setInputText: (text: string) => void;
+  addTodo: () => void;
 };
 
 export const InputTodo = (props: Props) => {
-  const { onClick } = props;
+  const { inputText, setInputText, addTodo } = props;
 
-  const [todoText, setTodoText] = useState<string>("");
-  const [todos, setTodos] = useState<string[]>([]);
-
-  const onChangeTodoText = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setTodoText(event.target.value);
-
-  const onClickAdd = () => {
-    if (todoText === "") return;
-    onClick();
-
-    const newTodos = [...todos, todoText];
-    setTodos(newTodos);
-    setTodoText("");
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
   };
 
   return (
@@ -35,12 +25,16 @@ export const InputTodo = (props: Props) => {
       }}
     >
       <input
-        style={{ borderRadius: "8px", border: "none", padding: "6px 16px" }}
+        style={{
+          borderRadius: "8px",
+          border: "none",
+          padding: "6px 16px",
+        }}
         placeholder="TODOを入力"
-        value={todoText}
-        onChange={onChangeTodoText}
+        value={inputText}
+        onChange={onChangeInput}
       />
-      <Button onClick={onClickAdd}>追加</Button>
+      <Button onClick={addTodo}>追加</Button>
     </div>
   );
 };
